@@ -24,7 +24,11 @@ export default class App extends PIXI.Application<HTMLCanvasElement> {
 
     App.instance = this;
 
-    this.setScreen(new GameScreen());
+    PIXI.Assets.load([
+      "assets/spritesheet.json"
+    ]).then(() => {
+      this.setScreen(new GameScreen());
+    });
 
     this.stage.eventMode = "static";
     this.stage.hitArea = this.screen;

@@ -17,7 +17,8 @@
   "scripts": {
     "build": "vite build",
     "dev": "vite",
-    "prettier": "prettier . --write"
+    "prettier": "prettier . --write",
+    "pack-sprites": "TexturePacker packer.tps"
   },
   "author": "sunil",
   "license": "UNLICENSED"
