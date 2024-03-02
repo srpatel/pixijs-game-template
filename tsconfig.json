@@ -12,9 +12,6 @@
     "baseUrl": "./src",
     "paths": {
       "@/*": ["./*"],
-      "@components/*": ["./components/*"],
-      "@screens/*": ["./screens/*"],
-      "@models/*": ["./models/*"]
     }
   },
   "include": ["src"]

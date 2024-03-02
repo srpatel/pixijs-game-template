@@ -1,8 +1,8 @@
 import * as PIXI from "pixi.js";
 import { Actions } from "pixi-actions";
 
-import Screen from "@screens/Screen";
-import GameScreen from "@screens/GameScreen";
+import Screen from "@/screens/Screen";
+import GameScreen from "@/screens/GameScreen";
 
 export default class App extends PIXI.Application<HTMLCanvasElement> {
   static instance: App;
