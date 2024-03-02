@@ -22,7 +22,7 @@ export default class GameScreen extends Screen {
 
     this.playerCharacter = new Character("player");
     this.playerCharacter.coords.set(2, 2);
-    this.grid.addCharacter(this.playerCharacter);
+    this.grid.dChars.addCharacter(this.playerCharacter);
 
     this.addChild(this.grid);
   }
@@ -62,7 +62,7 @@ export default class GameScreen extends Screen {
   doMove(dx: number, dy: number): void {
     if (this.isReadyToMove) {
       Actions.clear(this.playerCharacter);
-      const moveResult = this.grid.moveCharacter(this.playerCharacter, dx, dy);
+      const moveResult = this.grid.dChars.moveCharacter(this.playerCharacter, dx, dy);
 
       this.isReadyToMove = false;
       if (moveResult.didMove) {
