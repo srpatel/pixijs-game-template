@@ -24,14 +24,14 @@ export default class App extends PIXI.Application<HTMLCanvasElement> {
 
     App.instance = this;
 
-    PIXI.Assets.load([
-      "assets/spritesheet.json"
-    ]).then(() => {
+    PIXI.Assets.load(["assets/spritesheet.json"]).then(() => {
       this.setScreen(new GameScreen());
     });
 
     this.stage.eventMode = "static";
     this.stage.hitArea = this.screen;
+
+    window.addEventListener("keydown", this.onKeyDown.bind(this));
 
     PIXI.Ticker.shared.add((delta) => Actions.tick(delta / 60));
   }
@@ -67,6 +67,17 @@ export default class App extends PIXI.Application<HTMLCanvasElement> {
     if (this.currentScreen) {
       this.currentScreen.position.set(0, 0);
       this.currentScreen.setSize(this.screenWidth, this.screenHeight);
+    }
+  }
+
+  onKeyDown(event: KeyboardEvent): void {
+    // Don't scroll the page about
+    if (
+      ["Space", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].indexOf(
+        event.code,
+      ) > -1
+    ) {
+      event.preventDefault();
     }
   }
 }
