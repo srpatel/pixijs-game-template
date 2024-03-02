@@ -1,4 +1,4 @@
-import Screen from "@screens/Screen";
+import Screen from "@/screens/Screen";
 
 export default class GameScreen extends Screen {
   constructor() {
