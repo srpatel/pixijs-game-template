@@ -20,9 +20,15 @@ export default class GameScreen extends Screen {
 
     this.grid.dWalls.generateWalls(5);
 
+    // Player character
     this.playerCharacter = new Character("player");
     this.playerCharacter.coords.set(2, 2);
     this.grid.dChars.addCharacter(this.playerCharacter);
+
+    // Enemy
+    const enemy = new Character("enemy");
+    enemy.coords.set(0, 0);
+    this.grid.dChars.addCharacter(enemy);
 
     this.addChild(this.grid);
   }
@@ -55,14 +61,30 @@ export default class GameScreen extends Screen {
   }
 
   doEnemyMove(): void {
-    this.isReadyToMove = true;
-    this.pumpQueuedMove();
+    // Move enemies, after a delay!
+    const enemyMoveResult = this.grid.dChars.moveEnemies(this.playerCharacter);
+    const delay = enemyMoveResult.delay;
+
+    Actions.sequence(
+      Actions.delay(delay),
+      Actions.runFunc(() => {
+        this.isReadyToMove = true;
+        this.pumpQueuedMove();
+      }),
+    ).play();
+
+    // Post move stuff here (spawning enemies etc.)
+    // ...
   }
 
   doMove(dx: number, dy: number): void {
     if (this.isReadyToMove) {
       Actions.clear(this.playerCharacter);
-      const moveResult = this.grid.dChars.moveCharacter(this.playerCharacter, dx, dy);
+      const moveResult = this.grid.dChars.moveCharacter(
+        this.playerCharacter,
+        dx,
+        dy,
+      );
 
       this.isReadyToMove = false;
       if (moveResult.didMove) {

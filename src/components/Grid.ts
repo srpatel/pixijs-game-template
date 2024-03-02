@@ -1,7 +1,6 @@
 import * as PIXI from "pixi.js";
 import { Action, Actions } from "pixi-actions";
 import Coords from "@/models/Coords";
-import Character from "./Character";
 import Wall from "./Wall";
 import WallsDelegate from "./gridDelegates/WallsDelegate";
 import CharactersDelegate from "./gridDelegates/CharactersDelegate";
