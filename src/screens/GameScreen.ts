@@ -18,7 +18,7 @@ export default class GameScreen extends Screen {
 
     this.grid = new Grid(5);
 
-    this.grid.generateWalls(5);
+    this.grid.dWalls.generateWalls(5);
 
     this.playerCharacter = new Character("player");
     this.playerCharacter.coords.set(2, 2);

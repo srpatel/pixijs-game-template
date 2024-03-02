@@ -3,6 +3,7 @@ import { Action, Actions } from "pixi-actions";
 import Coords from "@/models/Coords";
 import Character from "./Character";
 import Wall from "./Wall";
+import WallsDelegate from "./gridDelegates/WallsDelegate";
 
 export default class Grid extends PIXI.Container {
   // The number of cells in each dimension
@@ -10,11 +11,8 @@ export default class Grid extends PIXI.Container {
   // The size in pixels of one cell
   cellSize: number;
 
-  walls: Wall[] = [];
-  wallsHolder: PIXI.Container = new PIXI.Container();
-
-  edgeWalls: Wall[] = [];
-  edgeWallsHolder: PIXI.Container = new PIXI.Container();
+  // Delegates
+  dWalls: WallsDelegate = new WallsDelegate(this);
 
   characters: Character[] = [];
   charactersHolder: PIXI.Container = new PIXI.Container();
@@ -30,8 +28,8 @@ export default class Grid extends PIXI.Container {
     // Add children
     this.addChild(this.backgroundSquaresHolder);
     this.addChild(this.charactersHolder);
-    this.addChild(this.wallsHolder);
-    this.addChild(this.edgeWallsHolder);
+    this.addChild(this.dWalls.wallsHolder);
+    this.addChild(this.dWalls.edgeWallsHolder);
 
     // Add background squares
     for (let i = 0; i < this.dimension; i++) {
@@ -110,45 +108,6 @@ export default class Grid extends PIXI.Container {
     }
   }
 
-  generateWalls(numWalls: number) {
-    // Delete all old walls
-    for (const w of this.walls) {
-      Actions.fadeOutAndRemove(w, 0.2).play();
-    }
-    this.walls = Wall.randomLayout(numWalls, this.dimension);
-
-    // Add some new walls... they must generate any closed areas
-    this.drawWalls();
-
-    this.edgeWalls = Wall.edges(this.dimension);
-    this.drawWalls(true);
-  }
-
-  drawWalls(edges: boolean = false) {
-    const walls = edges ? this.edgeWalls : this.walls;
-    const holder = edges ? this.edgeWallsHolder : this.wallsHolder;
-    (holder as any).cacheAsBitmap = false;
-    holder.removeChildren();
-    for (const w of walls) {
-      holder.addChild(w);
-
-      // Place in the correct place
-      this.setPositionTo(w, w.from, true);
-    }
-    (holder as any).cacheAsBitmap = true;
-  }
-
-  doesWallSeparate(start: Coords, dx: number, dy: number): Wall {
-    for (const wh of [this.walls, this.edgeWalls]) {
-      for (const w of wh) {
-        if (w.blocks(start, dx, dy)) {
-          return w;
-        }
-      }
-    }
-    return null;
-  }
-
   bumpAnimation(character: Character, dx: number, dy: number) {
     const time = 0.1;
     Actions.sequence(
@@ -197,7 +156,7 @@ export default class Grid extends PIXI.Container {
 
     const targetCoord = character.coords.clone().add(dx, dy);
 
-    if (!ignoreWalls && this.doesWallSeparate(character.coords, dx, dy)) {
+    if (!ignoreWalls && this.dWalls.doesWallSeparate(character.coords, dx, dy)) {
       // Bumping into hedge/fence
       // TODO : Hedge noise
       const delay = this.bumpAnimation(character, dx, dy);
