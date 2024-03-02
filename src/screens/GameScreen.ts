@@ -7,6 +7,9 @@ export default class GameScreen extends Screen {
     super();
 
     this.grid = new Grid(5);
+
+    this.grid.generateWalls(5);
+
     this.addChild(this.grid);
   }
 

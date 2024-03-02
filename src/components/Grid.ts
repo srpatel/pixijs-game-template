@@ -109,4 +109,32 @@ export default class Grid extends PIXI.Container {
       );
     }
   }
+
+  generateWalls(numWalls: number) {
+    // Delete all old walls
+    for (const w of this.walls) {
+      Actions.fadeOutAndRemove(w, 0.2).play();
+    }
+    this.walls = Wall.randomLayout(numWalls, this.dimension);
+
+    // Add some new walls... they must generate any closed areas
+    this.drawWalls();
+
+    this.edgeWalls = Wall.edges(this.dimension);
+    this.drawWalls(true);
+  }
+
+  drawWalls(edges: boolean = false) {
+    const walls = edges ? this.edgeWalls : this.walls;
+    const holder = edges ? this.edgeWallsHolder : this.wallsHolder;
+    (holder as any).cacheAsBitmap = false;
+    holder.removeChildren();
+    for (const w of walls) {
+      holder.addChild(w);
+
+      // Place in the correct place
+      this.setPositionTo(w, w.from, true);
+    }
+    (holder as any).cacheAsBitmap = true;
+  }
 }
